@@ -6,6 +6,9 @@ import numpy as np
 # my auth credentials
 import credentials
 
+# my object models
+import entry_model
+
 class MyStreamListener(tweepy.StreamListener):
 
     def on_status(self, status):
