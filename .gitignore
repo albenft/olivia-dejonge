@@ -1,3 +1,4 @@
 credentials.py
 .gitignore
+__pycache__/
 target/
