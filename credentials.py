@@ -1,4 +1,4 @@
-CONSUMER_KEY = ''
+CONSUMER_KEY = 'test-edit'
 CONSUMER_SECRET = ''
 
 ACCESS_TOKEN = ''
