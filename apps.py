@@ -2,6 +2,7 @@ import tweepy
 from datetime import datetime, timedelta, date
 import pandas as pd
 import numpy as np
+import time
 
 # my auth credentials
 import credentials
@@ -35,10 +36,13 @@ class SaveFileListener(tweepy.StreamListener):
     def on_status(self, status):
         entry = MyCsvEntryModel(status)
         if self.entry_count <= self.limit_entry:
-            print('entry count: ' + str(self.entry_count))
+            print('entry count: ' + str(self.entry_count) + ' | ' + str(entry.text[:80]))
+            extension = '_' + str(int(self.entry_count / 10000)) + '.csv'
+            
             try:
-                with open(self.filename, 'a') as io:
-                    io.write(entry.to_entry() + '\n')
+                data_store = self.filename + extension
+                with open(data_store, 'a', encoding='utf-8') as io_data:
+                    io_data.write(entry.to_entry() + '\n')
                 self.entry_count = self.entry_count + 1
             except BaseException as e:
                 print('Error on_status: %s' % str(e))
@@ -51,9 +55,32 @@ class SaveFileListener(tweepy.StreamListener):
 
 if __name__ == "__main__":
 
-    tag_list = ['jokowi']
-    filename = 'target/Jokowi_Tweets.csv'
-    limit_entry = 10
+    tag_list = []
+    filename = 'target/'
+    limit_entry = 200
+
+    # print('Input tag to stream: ')
+    tags = input('Input tag to stream: ').split(',')
+    for tag in tags:
+        tag_list.append(tag)
+    
+    name = input('Input file name to save result: ')
+    filename = filename + name
+
+    entry = input('Input limit tweets to stream: ')
+    if entry != None:
+        entry = int(entry)
+        limit_entry = entry
+
+    start_time = datetime.now()
+    print('Stream started at: ' + start_time.strftime('%Y-%m-%d %H:%M:%S'))
 
     tweet_streamer = TweetStreamer()
     tweet_streamer.stream_tweets(filename, tag_list, limit_entry)
+
+    end_time = datetime.now()
+    duration = end_time - start_time
+
+    print('Stream started at: ' + start_time.strftime('%Y-%m-%d %H:%M:%S'))
+    print('Stream ended at: ' + end_time.strftime('%Y-%m-%d %H:%M:%S'))
+    print('Stream done in: ' + str(duration))
