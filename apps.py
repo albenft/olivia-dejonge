@@ -1,8 +1,7 @@
 import tweepy
 from datetime import datetime, timedelta, date
-import pandas as pd
-import numpy as np
 import time
+import sys
 
 # my auth credentials
 import credentials
@@ -12,16 +11,38 @@ from entry_model import MyCsvEntryModel
 
 class TweetStreamer():
     """
-    Class for stream live tweets.
+    Class for streaming live tweets.
     """
-    def stream_tweets(self, filename, tag_list, limit_entry):
+    def stream_tweets(self, filename, tag_list, limit_entry, max_retries=10):
+        retry = 0
+
         listener = SaveFileListener(filename, limit_entry)
         auth = tweepy.OAuthHandler(credentials.CONSUMER_KEY, credentials.CONSUMER_SECRET)
         auth.set_access_token(credentials.ACCESS_TOKEN, credentials.ACCESS_TOKEN_SECRET)
         api = tweepy.API(auth)
 
-        stream = tweepy.Stream(auth = api.auth, listener = listener)
-        stream.filter(track=tag_list)
+        last_entry_count = listener.entry_count
+        terminated_by_max_retries = True
+
+        while retry < max_retries:
+            listener.entry_count = last_entry_count
+            try:
+                stream = tweepy.Stream(auth = api.auth, listener = listener)
+                completed = not stream.filter(track=tag_list)
+                if completed:
+                    terminated_by_max_retries = False
+                    retry = max_retries
+                
+            except Exception as e:
+                print('Error occured: %s' % str(e))
+                last_entry_count = listener.entry_count
+                retry = retry + 1
+                print('Retry again in 5 seconds...')
+                time.sleep(5)
+            
+        if terminated_by_max_retries:
+            print('Maximum retries exceeded.')
+        
 
 class SaveFileListener(tweepy.StreamListener):
     """
@@ -36,7 +57,12 @@ class SaveFileListener(tweepy.StreamListener):
     def on_status(self, status):
         entry = MyCsvEntryModel(status)
         if self.entry_count <= self.limit_entry:
-            print('entry count: ' + str(self.entry_count) + ' | ' + str(entry.text[:80]))
+            print('entry count: ' + str(self.entry_count) 
+                + ' | ' + entry.text[:60] 
+                + ' | length tweet: ' + str(len(entry.text)) 
+                + ' | on: ' + str(entry.date)
+                + ' | by: ' + str(entry.screen_name))
+            
             extension = '_' + str(int(self.entry_count / 10000)) + '.csv'
             
             try:
@@ -58,19 +84,31 @@ if __name__ == "__main__":
     tag_list = []
     filename = 'target/'
     limit_entry = 200
+    max_retries = 10
 
     # print('Input tag to stream: ')
-    tags = input('Input tag to stream: ').split(',')
-    for tag in tags:
-        tag_list.append(tag)
+    tags = input('Input tag to stream: ')
+    while not tags:
+        print('Tag(s) field is required!')
+        tags = input('Input tag to stream: ')
+    for tag in tags.split(','):
+            tag_list.append(tag)
     
-    name = input('Input file name to save result: ')
+    name = input('Input filename to save result: ')
+    while not name:
+        print('Filename field is required!')
+        name = input('Input filename to save result: ')
     filename = filename + name
 
-    entry = input('Input limit tweets to stream: ')
-    if entry != None:
+    entry = input('Input limit tweets to stream (leave blank for default=200): ')
+    if entry != '':
         entry = int(entry)
         limit_entry = entry
+    
+    retries = input('Input maximum number of retry to attempt when error occured (leave blank for default=10): ')
+    if retries != '':
+        retries = int(retries)
+        max_retries = retries
 
     start_time = datetime.now()
     print('Stream started at: ' + start_time.strftime('%Y-%m-%d %H:%M:%S'))

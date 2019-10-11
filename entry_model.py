@@ -1,5 +1,4 @@
 import tweepy
-import pandas as pd
 from datetime import datetime, timedelta, date
 
 class MyCsvEntryModel(tweepy.Status):
@@ -11,6 +10,7 @@ class MyCsvEntryModel(tweepy.Status):
         location = user['location']
         string_time = status._json['created_at']
         date = datetime.strptime(string_time, '%a %b %d %H:%M:%S %z %Y')
+        user_mentions = [user['screen_name'] for user in status._json['entities']['user_mentions']]
 
         text = ''
         if hasattr(status, "retweeted_status"):  # Check if Retweet
@@ -26,15 +26,17 @@ class MyCsvEntryModel(tweepy.Status):
         
         self.date = datetime.strftime(date, '%Y-%m-%d %H:%M:%S')
         self.name = user['name']
+        self.screen_name = user['screen_name']
         self.verified = 1 if user['verified'] == True else 0
         self.location = location if location != None else ''
         self.text = text.replace(';','').replace('\n',' ').replace('  ',' ')
+        self.user_mentions = str(user_mentions)[1:-1]
     
     def to_entry(self):
         """
         Build a semicolon separated value string to be inserted to a csv file
         """
-        return self.date + ';' + self.name + ';' + str(self.verified) + ';' + self.location + ';' + self.text
+        return self.date + ';' + self.name  + ';' + self.screen_name + ';' + str(self.verified) + ';' + self.location + ';' + self.text + ';' + self.user_mentions
 
         
 
