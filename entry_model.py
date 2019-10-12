@@ -50,7 +50,3 @@ class MyCsvEntryModel(tweepy.Status):
         )
 
         return entry
-
-        
-
-        
