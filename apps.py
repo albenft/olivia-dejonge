@@ -14,7 +14,7 @@ if __name__ == "__main__":
         print('Tag(s) field is required!')
         tags = input('Input tag to stream: ')
     for tag in tags.split(','):
-            tag_list.append(tag)
+        tag_list.append(tag)
     
     name = input('Input filename to save result: ')
     while not name:
