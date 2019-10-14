@@ -18,13 +18,13 @@ Olivia DeJonge is a program written in Python with functionality of doing live s
 	
 	Replace the inside '[]' contents with your Twitter for Developer account credentials.
 - **Python Packages**
-Those following packages are required for the program. You can use **pip** or other package management tools to get the required packages. Here are list of the packages required and the installation commands in pip.
+    Those following packages are required for the program. You can use **pip** or other package management tools to get the required packages. Here are list of the packages required and the installation commands in pip.
 	1. **Tweepy**
-	`$ pip install tweepy` 
+        `$ pip install tweepy` 
 	2. **NumPy**
-	`$ pip install numpy` 
+        `$ pip install numpy` 
 	3. **Pandas**
-	`$ pip install pandas` 
+        `$ pip install pandas` 
 
 # Basic Usage
 You can use this program by executing the **apps.py**.
