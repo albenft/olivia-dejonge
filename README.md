@@ -38,7 +38,7 @@ You can use this program by executing the **apps.py**.
 $ python apps.py
 ```
 
-The program will request some information regarding to the tweet you want to stream.
+The program will request some informations regarding to the tweet you want to stream.
 
 # Files
 
