@@ -9,10 +9,12 @@ Olivia DeJonge is a program written in Python with functionality of doing live s
 
 - **Credentials File**
 	Create a python file named **credentials.py** on the same directory of cloned repository. Write those following codes on the file:
-	> CONSUMER_KEY =  '[Your Twitter Consumer Key]' # without bracket
-	CONSUMER_SECRET =  '[Your Twitter Consumer Secret]' # without bracket
-	ACCESS_TOKEN =  '[Your Twitter Access Token]' # without bracket
-	ACCESS_TOKEN_SECRET =  '[Your Twitter Access Token Secret]' # without bracket
+	```python
+	CONSUMER_KEY = '[Your Twitter Consumer Key]' # without bracket
+	CONSUMER_SECRET = '[Your Twitter Consumer Secret]' # without bracket
+	ACCESS_TOKEN = '[Your Twitter Access Token]' # without bracket
+	ACCESS_TOKEN_SECRET = '[Your Twitter Access Token Secret]' # without bracket
+	```
 	
 	Replace the inside '[]' contents with your Twitter for Developer account credentials.
 - **Python Packages**
@@ -34,16 +36,17 @@ The program will request some information regarding to the tweet you want to str
 
 Olivia DeJonge will save the streaming results in `.csv` file, and these files will all be stored in `target/` folder.
 Table below explains all the attribute of the data stored.
-|Column                |Description                          
-|----------------|-------------------------------
-|`date` | Date of tweet posted.
-|`name` | Name of user who sent the tweet.
-|`screen_name` | Username of user who sent the tweet. `@someone` without the `@`
-|`verified` | Boolean representation of whether the account that sent the tweet is verified or not. `0 = not verified, 1= verified`
-|`location` | Location of user who sent the tweet.
-|`text` | The tweet itself
-|`user_mentions` | List of username of users mentioned in the tweet.
-|`hashtags` | List of hashtag used in the tweet
+
+Column | Description
+-|-
+`date` | Date of tweet posted.
+`name` | Name of user who sent the tweet.
+`screen_name` | Username of user who sent the tweet. `@someone` without the `@`
+`verified` | Boolean representation of whether the account that sent the tweet is verified or not. `0 = not verified, 1= verified`
+`location` | Location of user who sent the tweet.
+`text` | The tweet itself
+`user_mentions` | List of username of users mentioned in the tweet.
+`hashtags` | List of hashtag used in the tweet
 
 # Developer Message
 > Go follow [https://instagram.com/olivia_dejonge](instagram.com/olivia_dejonge) <3 <3 <3 
