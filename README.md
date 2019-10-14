@@ -58,4 +58,4 @@ Column | Description
 
 # Developer Message
 
-> Go follow [https://instagram.com/olivia_dejonge](instagram.com/olivia_dejonge) <3 <3 <3 
+That's all. Have a nice day <3 <3 <3
