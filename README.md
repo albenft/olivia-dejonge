@@ -38,12 +38,12 @@ You can use this program by executing the **apps.py**.
 $ python apps.py
 ```
 
-The program will request some informations regarding to the tweet you want to stream.
+The program will request some informations regarding to tweets you want to stream.
 
 # Files
 
 Olivia DeJonge will save the streaming results in `.csv` file, and these files will all be stored in `target/` folder.
-Table below explains all the attribute of the data stored.
+Table below explains all the attributes of the data stored.
 
 Column | Description
 -|-
