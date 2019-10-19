@@ -11,7 +11,7 @@ class TweetStreamer():
     """
     Class for streaming live tweets.
     """
-    def stream_tweets(self, filename, tag_list, limit_entry, max_retries=10):
+    def stream_tweets(self, filename, tag_list, limit_entry, max_retries=1000):
         retry = 0
 
         listener = SaveFileListener(filename, limit_entry)
@@ -54,14 +54,16 @@ class SaveFileListener(tweepy.StreamListener):
 
     def on_status(self, status):
         entry = MyCsvEntryModel(status)
-        if self.entry_count <= self.limit_entry:
-            print('entry count: ' + str(self.entry_count) 
-                + ' | ' + entry.text[:60] 
-                + ' | length tweet: ' + str(len(entry.text)) 
-                + ' | on: ' + str(entry.date)
-                + ' | by: ' + str(entry.screen_name))
+
+        if self.limit_entry == None:
+            if (self.entry_count - 1) % 100 == 0:
+                print('entry count: ' + str(self.entry_count) 
+                    + ' | ' + entry.text[:60] 
+                    + ' | length tweet: ' + str(len(entry.text)) 
+                    + ' | on: ' + str(entry.date)
+                    + ' | by: ' + str(entry.screen_name))
             
-            extension = '_' + str(int(self.entry_count / 10000)) + '.csv'
+            extension = '_' + str(int(self.entry_count / 1000000)) + '.csv'
             
             try:
                 data_store = self.filename + extension
@@ -71,6 +73,25 @@ class SaveFileListener(tweepy.StreamListener):
             except BaseException as e:
                 print('Error on_status: %s' % str(e))
             return True
+
+        elif self.entry_count <= self.limit_entry:
+            print('entry count: ' + str(self.entry_count) 
+                + ' | ' + entry.text[:60] 
+                + ' | length tweet: ' + str(len(entry.text)) 
+                + ' | on: ' + str(entry.date)
+                + ' | by: ' + str(entry.screen_name))
+            
+            extension = '_' + str(int(self.entry_count / 1000000)) + '.csv'
+            
+            try:
+                data_store = self.filename + extension
+                with open(data_store, 'a', encoding='utf-8') as io_data:
+                    io_data.write(entry.to_entry() + '\n')
+                self.entry_count = self.entry_count + 1
+            except BaseException as e:
+                print('Error on_status: %s' % str(e))
+            return True
+
         else:
             return False
         

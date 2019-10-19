@@ -5,8 +5,8 @@ if __name__ == "__main__":
 
     tag_list = []
     filename = 'target/'
-    limit_entry = 200
-    max_retries = 10
+    limit_entry = None
+    max_retries = 1000
 
     # print('Input tag to stream: ')
     tags = input('Input tag to stream: ')
@@ -22,12 +22,12 @@ if __name__ == "__main__":
         name = input('Input filename to save result: ')
     filename = filename + name
 
-    entry = input('Input limit tweets to stream (leave blank for default=200): ')
+    entry = input('Input limit tweets to stream (leave blank for unlimited): ')
     if entry != '':
         entry = int(entry)
         limit_entry = entry
     
-    retries = input('Input maximum number of retry to attempt when error occured (leave blank for default=10): ')
+    retries = input('Input maximum number of retry to attempt when error occured (leave blank for default=1000): ')
     if retries != '':
         retries = int(retries)
         max_retries = retries
